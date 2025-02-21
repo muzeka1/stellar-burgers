@@ -1,11 +1,13 @@
 import { Preloader } from '@ui';
 import React from 'react';
-import {useSelector} from 'react-redux';
+import { useSelector, UseSelector } from 'react-redux';
 import {Outlet, Navigate} from 'react-router-dom';
+import { RootState } from '../../services/store';
 
 
 export const ProtectedRoute = () => {
-    const { isInit, isLoading, user } = {isInit: true, isLoading: false, user: {name: "123"}};
+
+    const { isInit, isLoading, user } = useSelector((store: RootState) => store.user);
     
     if (!isInit || isLoading) {
         return <Preloader />

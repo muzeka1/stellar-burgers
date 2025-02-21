@@ -11,7 +11,11 @@ import { getIngredientsThunk, selectIsIngredientsLoading } from '../../slices/in
 export const ConstructorPage: FC = () => {
   const dispatch = useDispatch()
   /** TODO: взять переменную из стора */
+
   const isIngredientsLoading = useSelector(selectIsIngredientsLoading);
+  useEffect(() => {
+    dispatch(getIngredientsThunk())
+  }, [])
 
   return (
     <>
@@ -25,7 +29,7 @@ export const ConstructorPage: FC = () => {
             Соберите бургер
           </h1>
           <div className={`${styles.main} pl-5 pr-5`}>
-            <BurgerIngredients />
+            {/* <BurgerIngredients /> */}
             <BurgerConstructor />
           </div>
         </main>

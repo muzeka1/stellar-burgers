@@ -11,10 +11,6 @@ export const BurgerIngredients: FC = () => {
   const dispatch = useDispatch();
   const ingredients = useSelector(selectIngredients)
 
-  useEffect(() => {
-    dispatch(getIngredientsThunk())
-  }, [])
-
   const [buns, setBuns] = useState<TIngredient[]>([])
   const [mains, setMains] = useState<TIngredient[]>([])
   const [sauces, setSauces] = useState<TIngredient[]>([])

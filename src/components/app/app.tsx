@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from '../../services/store';
 import { AppHeader, IngredientDetails, Modal, OrderInfo, ProtectedRoute } from '@components';
 import { getIngredientsThunk, selectIngredients } from '../../slices/ingredients-slice';
 import React, { useEffect } from 'react';
+import { getUserThunk } from '../../slices/user-slice';
 
 // const App = () => (
 //   <div className={styles.app}>
@@ -19,6 +20,9 @@ const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  useEffect(()=>{
+    dispatch(getUserThunk())
+  }, [])
   
   const backgroundLocation = location.state?.backgroundLocation;
   return (
