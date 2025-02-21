@@ -19,10 +19,6 @@ const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  useEffect(()=>{
-    dispatch(getUserThunk())
-  }, [])
   
   const backgroundLocation = location.state?.backgroundLocation;
   return (
@@ -31,6 +27,7 @@ const App = () => {
       <Routes location={backgroundLocation || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
+        <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route element={<ProtectedRoute />}>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />

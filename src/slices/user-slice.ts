@@ -7,89 +7,51 @@ import { RootState } from '../services/store';
 export const loginUserThunk = createAsyncThunk(
     'users/loginUser',
     async ({ email, password }: TLoginData, { rejectWithValue }) => {
-        try {
-            const data = await loginUserApi({ email, password })
+        const data = await loginUserApi({ email, password })
+        if (data.success) {
             setCookie('accessToken', data.accessToken);
             localStorage.setItem('refreshToken', data.refreshToken);
-            return data
-        } catch (error) {
-            return rejectWithValue(error)
         }
+        return data
     }
 )
 
 export const registerUserThunk = createAsyncThunk(
     'users/registerUser',
     async ({ email, name, password }: TRegisterData, { rejectWithValue }) => {
-        try {
-            const data = await registerUserApi({ email, name, password })
+        const data = await registerUserApi({ email, name, password })
+        if (data.success) {
             setCookie('accessToken', data.accessToken);
             localStorage.setItem('refreshToken', data.refreshToken);
-            return data
-        } catch (error) {
-            return rejectWithValue(error)
         }
+        return data
     }
 )
 
 export const forgotPasswordThunk = createAsyncThunk(
     'users/forgotPassword',
-    async (emailData: { email: string }, { rejectWithValue }) => {
-        try {
-            const data = await forgotPasswordApi(emailData)
-            return data;
-        } catch (error) {
-            rejectWithValue(error)
-        }
-    }
+    async (emailData: { email: string }) => forgotPasswordApi(emailData)
+
 );
 
 export const resetPasswordThunk = createAsyncThunk(
     'users/resetPassword',
-    async (resetPasswordData: { password: string; token: string }, {rejectWithValue}) => {
-        try {
-            const data = await resetPasswordApi(resetPasswordData);
-            return data;
-        } catch (error) {
-            return rejectWithValue(error)
-        }
-    }
+    async (resetPasswordData: { password: string; token: string }) => resetPasswordApi(resetPasswordData)
 );
 
 export const getUserThunk = createAsyncThunk(
     'user/getUser',
-    async (_, { rejectWithValue }) => {
-        try {
-            const data = await getUserApi()
-            return data;
-        } catch (error) {
-            return rejectWithValue(error)
-        }
-    }
+    async () => getUserApi()
 )
 
 export const updateUserThunk = createAsyncThunk(
     'user/updateUser',
-    async (user: TRegisterData, { rejectWithValue }) => {
-        try {
-            const data = await updateUserApi(user);
-            return data
-        } catch (error) {
-          return rejectWithValue(error)  
-        }
-    }
+    async (user: TRegisterData) => updateUserApi(user)
 )
 
 export const logoutUserThunk = createAsyncThunk(
     'user/logoutUser',
-    async (_, {rejectWithValue}) => {
-        try {
-            const data = await logoutApi();
-            return data;
-        } catch (error) {
-            return rejectWithValue(error)
-        }        
-    }
+    async () => logoutApi()
 )
 
 export interface UserState {
@@ -118,10 +80,9 @@ export const userSlice = createSlice({
         builder.addCase(loginUserThunk.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(loginUserThunk.rejected, (state, { payload }) => {
+        builder.addCase(loginUserThunk.rejected, (state, action) => {
             state.isLoading = false;
-            state.isInit = true;
-            state.error = payload as string
+            state.error = action.error?.message ?? "Unknown error"
         });
         builder.addCase(loginUserThunk.fulfilled, (state, { payload }) => {
             state.isLoading = false;
@@ -131,10 +92,10 @@ export const userSlice = createSlice({
         builder.addCase(registerUserThunk.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(registerUserThunk.rejected, (state, { payload }) => {
+        builder.addCase(registerUserThunk.rejected, (state, action) => {
             state.isLoading = false;
             state.isInit = true;
-            state.error = payload as string
+            state.error = action.error?.message ?? "Unknown error"
         });
         builder.addCase(registerUserThunk.fulfilled, (state, { payload }) => {
             state.isLoading = false;
@@ -144,10 +105,10 @@ export const userSlice = createSlice({
         builder.addCase(getUserThunk.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(getUserThunk.rejected, (state, { payload }) => {
+        builder.addCase(getUserThunk.rejected, (state, action) => {
             state.isLoading = false;
             state.isInit = true;
-            state.error = payload as string
+            state.error = action.error?.message ?? "Unknown error"
         });
         builder.addCase(getUserThunk.fulfilled, (state, { payload }) => {
             state.isLoading = false;
@@ -158,17 +119,20 @@ export const userSlice = createSlice({
         builder.addCase(updateUserThunk.fulfilled, (state, { payload }) => {
             state.user = payload.user
         });
+        builder.addCase(logoutUserThunk.rejected, (state, action) => {
+            state.error = action.error?.message ?? "Unknown error"
+        })
         builder.addCase(logoutUserThunk.fulfilled, (state) => {
             state.user = null;
         });
-        builder.addCase(forgotPasswordThunk.rejected, (state, {payload}) => {
-            state.error = payload as string;
+        builder.addCase(forgotPasswordThunk.rejected, (state, action) => {
+            state.error = action.error?.message ?? "Unknown error"
         });
-        builder.addCase(forgotPasswordThunk.fulfilled, () => {});
-        builder.addCase(resetPasswordThunk.rejected, (state, {payload}) => {
-            state.error = payload as string;
+        builder.addCase(forgotPasswordThunk.fulfilled, () => { });
+        builder.addCase(resetPasswordThunk.rejected, (state, action) => {
+            state.error = action.error?.message ?? "Unknown error"
         });
-        builder.addCase(resetPasswordThunk.fulfilled, () => {});
+        builder.addCase(resetPasswordThunk.fulfilled, () => { });
     }
 });
 

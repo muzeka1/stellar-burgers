@@ -29,7 +29,7 @@ export const ConstructorPage: FC = () => {
             Соберите бургер
           </h1>
           <div className={`${styles.main} pl-5 pr-5`}>
-            {/* <BurgerIngredients /> */}
+            <BurgerIngredients />
             <BurgerConstructor />
           </div>
         </main>

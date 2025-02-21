@@ -7,6 +7,7 @@ import { TBurgerIngredientProps } from './type';
 import {addBun, addIngredient} from '../../slices/ingredients-slice'
 import { useDispatch } from '../../services/store';
 import { TIngredient } from '@utils-types';
+import { nanoid } from '@reduxjs/toolkit';
 
 export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
   ({ ingredient, count }) => {
@@ -17,7 +18,7 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
       if (ingredient.type == "bun") {
         dispatch(addBun(ingredient))
       } else {
-        dispatch(addIngredient(ingredient))
+        dispatch(addIngredient({ingredient, id: nanoid()}))
       }
     };
 
@@ -25,7 +26,7 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
       <BurgerIngredientUI
         ingredient={ingredient}
         count={count}
-        locationState={{ background: location }}
+        locationState={{ backgroundLocation: location }}
         handleAdd={handleAdd}
       />
     );

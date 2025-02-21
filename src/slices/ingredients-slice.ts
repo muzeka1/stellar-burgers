@@ -5,14 +5,7 @@ import { RootState } from '../services/store';
 
 export const getIngredientsThunk = createAsyncThunk(
     'ingredients/getIngredients',
-    async (_, {rejectWithValue}) => {
-        try {
-            const data = await getIngredientsApi();
-            return data
-        } catch (err) {
-            return rejectWithValue(err)
-        }
-    }
+    async () => getIngredientsApi()
 )
 
 export interface IIngredientsState {
@@ -45,8 +38,8 @@ const ingredientSlice = createSlice({
         removeBun: (state) => {
             state.constructorItems.bun = null
         },
-        addIngredient: (state, {payload}: {payload: TIngredient}) => {
-            state.constructorItems.ingredients.push({...payload, id: nanoid()})
+        addIngredient: (state, {payload}: {payload: {ingredient: TIngredient; id: string}}) => {
+            state.constructorItems.ingredients.push({...payload.ingredient, id: payload.id})
         },
         removeIngredient: (state, {payload}: {payload: string}) => {
             state.constructorItems.ingredients = state.constructorItems.ingredients.filter(item => item.id != payload)
@@ -56,9 +49,9 @@ const ingredientSlice = createSlice({
         builder.addCase(getIngredientsThunk.pending, (state) => {
             state.isLoading = true
         });
-        builder.addCase(getIngredientsThunk.rejected, (state, {payload}) => {
+        builder.addCase(getIngredientsThunk.rejected, (state, action) => {
             state.isLoading = false;
-            state.error = payload as string;
+            state.error = action.error?.message ?? "Unknown error"
         });
         builder.addCase(getIngredientsThunk.fulfilled, (state, {payload}) => {
             state.isLoading = false;

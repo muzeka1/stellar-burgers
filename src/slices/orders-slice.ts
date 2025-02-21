@@ -5,50 +5,22 @@ import { RootState } from '../services/store';
 
 export const getFeedsThunk = createAsyncThunk(
     'orders/getFeeds',
-    async (_, {rejectWithValue}) => {
-        try {
-            const feeds = await getFeedsApi();
-            return feeds
-        } catch (err) {
-            return rejectWithValue(err)
-        }
-    }
+    async () => getFeedsApi()
 )
 
 export const getOrdersThunk = createAsyncThunk(
     'orders/getOrders',
-    async (_, {rejectWithValue}) => {
-        try {
-            const orders = await getOrdersApi()
-            return orders
-        } catch (err) {
-            return rejectWithValue(err)
-        }
-    }
+    async () => getOrdersApi()
 )
 
 export const orderBurgerThunk = createAsyncThunk(
     'orders/orderBurger',
-    async (ingredients: string[], {rejectWithValue}) => {
-        try {
-            const order = await orderBurgerApi(ingredients)
-            return order
-        } catch (err) {
-            return rejectWithValue(err)
-        }
-    }
+    async (ingredients: string[]) => orderBurgerApi(ingredients)
 )
 
 export const getOrderByNumberThunk = createAsyncThunk(
     'orders/getOrderByNumber',
-    async (number: number, {rejectWithValue}) => {
-        try {
-            const order = await getOrderByNumberApi(number)
-            return order
-        } catch (err) {
-            return rejectWithValue(err)
-        }
-    }
+    async (number: number) => getOrderByNumberApi(number)
 )
 
 export interface IOrdersState {
@@ -73,9 +45,9 @@ const orderSlice = createSlice({
         builder.addCase(getOrdersThunk.pending, (state) => {
             state.isLoading = true
         })
-        builder.addCase(getOrdersThunk.rejected, (state, {payload}) => {
+        builder.addCase(getOrdersThunk.rejected, (state, action) => {
             state.isLoading = false;
-            state.error = payload as string;
+            state.error = action.error?.message ?? "Unknown error"
         })
         builder.addCase(getOrdersThunk.fulfilled, (state, {payload}) => {
             state.isLoading = false;
@@ -84,9 +56,9 @@ const orderSlice = createSlice({
         builder.addCase(getFeedsThunk.pending, (state) => {
             state.isLoading = true
         })
-        builder.addCase(getFeedsThunk.rejected, (state, {payload}) => {
+        builder.addCase(getFeedsThunk.rejected, (state, action) => {
             state.isLoading = false;
-            state.error = payload as string;
+            state.error = action.error?.message ?? "Unknown error"
         })
         builder.addCase(getFeedsThunk.fulfilled, (state, {payload}) => {
             state.isLoading = false;
@@ -95,9 +67,9 @@ const orderSlice = createSlice({
         builder.addCase(orderBurgerThunk.pending, (state) => {
             state.isLoading = true
         })
-        builder.addCase(orderBurgerThunk.rejected, (state, {payload}) => {
+        builder.addCase(orderBurgerThunk.rejected, (state, action) => {
             state.isLoading = false;
-            state.error = payload as string;
+            state.error = action.error?.message ?? "Unknown error"
         })
         builder.addCase(orderBurgerThunk.fulfilled, (state, {payload}) => {
             state.isLoading = false;
@@ -105,9 +77,9 @@ const orderSlice = createSlice({
         builder.addCase(getOrderByNumberThunk.pending, (state) => {
             state.isLoading = true
         })
-        builder.addCase(getOrderByNumberThunk.rejected, (state, {payload}) => {
+        builder.addCase(getOrderByNumberThunk.rejected, (state, action) => {
             state.isLoading = false;
-            state.error = payload as string;
+            state.error = action.error?.message ?? "Unknown error"
         })
         builder.addCase(getOrderByNumberThunk.fulfilled, (state, {payload}) => {
             state.isLoading = false;

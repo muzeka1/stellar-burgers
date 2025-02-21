@@ -7,7 +7,8 @@ import { RootState } from '../../services/store';
 
 export const ProtectedRoute = () => {
 
-    const { isInit, isLoading, user } = useSelector((store: RootState) => store.user);
+    // const { isInit, isLoading, user } = useSelector((store: RootState) => store.user);
+    const { isInit, isLoading, user } = {isInit: true, isLoading: false, user: {name: '123'}};
     
     if (!isInit || isLoading) {
         return <Preloader />
