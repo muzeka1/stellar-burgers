@@ -2,8 +2,10 @@ import { ConstructorPage, Feed, ForgotPassword, Login, NotFound404, Profile, Pro
 import '../../index.css';
 import styles from './app.module.css';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom"
-
+import { useDispatch, useSelector } from '../../services/store';
 import { AppHeader, IngredientDetails, Modal, OrderInfo, ProtectedRoute } from '@components';
+import { getIngredientsThunk, selectIngredients } from '../../slices/ingredients-slice';
+import React, { useEffect } from 'react';
 
 // const App = () => (
 //   <div className={styles.app}>
@@ -14,7 +16,10 @@ import { AppHeader, IngredientDetails, Modal, OrderInfo, ProtectedRoute } from '
 
 const App = () => {
   const location = useLocation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  
   const backgroundLocation = location.state?.backgroundLocation;
   return (
     <>
