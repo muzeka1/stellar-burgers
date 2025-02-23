@@ -28,7 +28,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName, location }) => (
       </div>
       <div className={styles.logo}>
         <Link to='/' state={{ from: location }}>
-          <Logo className='' />
+          <Logo className={styles.link_active} />
         </Link>
       </div>
 
