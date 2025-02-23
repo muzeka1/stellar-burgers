@@ -14,14 +14,14 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName, location }) => (
     <nav className={`${styles.menu} p-4`}>
       <div className={styles.menu_part_left}>
         <>
-        <Link to='/' className={location.pathname == "/" ? styles.link_active : styles.link}>
+        <Link to='/' className={location.pathname == "/" ? styles.link_active : styles.link} state={{from: location}}>
           <BurgerIcon type={location.pathname == '/' ? 'primary' : 'disabled'} />
           <p className='text text_type_main-default ml-2 mr-10'>Конструктор</p>
         </Link>
         </>
         <>
-        <Link to='/profile/orders' className={location.pathname.startsWith('/profile/orders') ? styles.link_active : styles.link}>
-          <ListIcon type={location.pathname.startsWith('/profile/orders') ? 'primary' : 'disabled'} />
+        <Link to='/feed' className={location.pathname.startsWith('/feed') ? styles.link_active : styles.link} state={{from: location}}>
+          <ListIcon type={location.pathname.startsWith('/feed') ? 'primary' : 'disabled'} />
           <p className='text text_type_main-default ml-2'>Лента заказов</p>
           </Link>
         </>
@@ -31,7 +31,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName, location }) => (
       </div>
 
       <div className={styles.link_position_last}>
-        <Link to='/profile' className={location.pathname == ('/profile') ? styles.link_active : styles.link}>
+        <Link to='/profile' className={location.pathname == ('/profile') ? styles.link_active : styles.link} state={{from: location}}>
           <ProfileIcon type={location.pathname == '/profile' ? 'primary' : 'disabled'} />
           <p className='text text_type_main-default ml-2'>
             {userName || 'Личный кабинет'}

@@ -2,7 +2,7 @@ import { FC, SyntheticEvent, useState } from 'react';
 import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
 import { loginUserThunk, selectErrorUser, selectIsUserLoading, selectUser } from '../../slices/user-slice';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Preloader } from '../../components/ui';
 
 export const Login: FC = () => {
@@ -13,6 +13,8 @@ export const Login: FC = () => {
   const user = useSelector(selectUser);
   const isLoading = useSelector(selectIsUserLoading)
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || '/';
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -22,7 +24,7 @@ export const Login: FC = () => {
   if (isLoading) {
     return <Preloader/>
   } else if (!isLoading && user) {
-    navigate("/")
+    navigate(from, {replace: true})
   } else {
     return (
       <LoginUI

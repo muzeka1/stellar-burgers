@@ -16,7 +16,7 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
 
     const handleAdd = () => {
       if (ingredient.type == "bun") {
-        dispatch(addBun(ingredient))
+        dispatch(addBun({ingredient, id: nanoid()}))
       } else if (ingredient.type == "main") {
         dispatch(addMain({ingredient, id: nanoid()}))
       } else {

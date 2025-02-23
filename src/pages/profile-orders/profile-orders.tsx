@@ -13,7 +13,5 @@ export const ProfileOrders: FC = () => {
     dispatch(getOrdersThunk())
   }, [dispatch])
 
- 
-
   return (isOrderLoading ? <Preloader/> : <ProfileOrdersUI orders={orders} />);
 };

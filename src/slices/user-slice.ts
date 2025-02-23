@@ -18,7 +18,7 @@ export const loginUserThunk = createAsyncThunk(
 
 export const registerUserThunk = createAsyncThunk(
     'users/registerUser',
-    async ({ email, name, password }: TRegisterData, { rejectWithValue }) => {
+    async ({ email, name, password }: TRegisterData) => {
         const data = await registerUserApi({ email, name, password })
         if (data.success) {
             setCookie('accessToken', data.accessToken);
@@ -30,23 +30,22 @@ export const registerUserThunk = createAsyncThunk(
 
 export const forgotPasswordThunk = createAsyncThunk(
     'users/forgotPassword',
-    async (emailData: { email: string }) => forgotPasswordApi(emailData)
-
+    forgotPasswordApi
 );
 
 export const resetPasswordThunk = createAsyncThunk(
     'users/resetPassword',
-    async (resetPasswordData: { password: string; token: string }) => resetPasswordApi(resetPasswordData)
+    resetPasswordApi
 );
 
 export const getUserThunk = createAsyncThunk(
     'user/getUser',
-    async () => getUserApi()
+    getUserApi
 )
 
 export const updateUserThunk = createAsyncThunk(
     'user/updateUser',
-    async (user: TRegisterData) => updateUserApi(user)
+    updateUserApi
 )
 
 export const logoutUserThunk = createAsyncThunk(
@@ -66,6 +65,7 @@ export interface UserState {
     isLoading: boolean;
     user: TUser | null;
     error: string | null;
+    isLoggedIn: boolean;
 }
 
 const initialState: UserState = {
@@ -73,6 +73,7 @@ const initialState: UserState = {
     isLoading: false,
     user: null,
     error: null,
+    isLoggedIn: false
 }
 
 export const userSlice = createSlice({
@@ -85,6 +86,7 @@ export const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(loginUserThunk.pending, (state) => {
+            state.isLoggedIn = false;
             state.isLoading = true;
             state.error = null;
         });
@@ -96,9 +98,11 @@ export const userSlice = createSlice({
             state.isLoading = false;
             state.isInit = true;
             state.error = null;
-            state.user = payload.user
+            state.user = payload.user;
+            state.isLoggedIn = true
         });
         builder.addCase(registerUserThunk.pending, (state) => {
+            state.isLoggedIn = false;
             state.isLoading = true;
             state.error = null;
         });
@@ -113,8 +117,10 @@ export const userSlice = createSlice({
             state.isInit = true;
             state.error = null;
             state.user = payload.user
+            state.isLoggedIn = true
         });
         builder.addCase(getUserThunk.pending, (state) => {
+            state.isLoggedIn = false;
             state.isLoading = true;
             state.error = null;
         });
@@ -128,6 +134,7 @@ export const userSlice = createSlice({
             state.isInit = true;
             state.error = null;
             state.user = payload.user;
+            state.isLoggedIn = true;
         });
 
         builder.addCase(updateUserThunk.fulfilled, (state, { payload }) => {
@@ -140,6 +147,7 @@ export const userSlice = createSlice({
         builder.addCase(logoutUserThunk.fulfilled, (state) => {
             state.user = null;
             state.error = null;
+            state.isLoggedIn = false;
         });
         builder.addCase(forgotPasswordThunk.pending, (state) => {
             state.error = null;
@@ -167,5 +175,6 @@ export const { init } = userSlice.actions;
 export const selectUser = (state: RootState) => state.user.user;
 export const selectErrorUser = (state: RootState) => state.user.error;
 export const selectIsUserLoading = (state: RootState) => state.user.isLoading;
+export const selectIsLoggedIn = (state: RootState) => state.user.isLoggedIn;
 
 export default userSlice.reducer

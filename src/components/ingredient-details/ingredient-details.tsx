@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from '../../services/store';
 import { selectIngredients } from '../../slices/ingredients-slice';
 
-export const IngredientDetails: FC = () => {
+export const IngredientDetails: FC<{isMain?: boolean}> = ({isMain = false}) => {
   /** TODO: взять переменную из стора */
   const {id} = useParams()
   const ingredients = useSelector(selectIngredients)
@@ -15,5 +15,5 @@ export const IngredientDetails: FC = () => {
     return <Preloader />;
   }
 
-  return <IngredientDetailsUI ingredientData={ingredientData} />;
+  return <IngredientDetailsUI isMain={isMain} ingredientData={ingredientData} />;
 };

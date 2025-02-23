@@ -32,8 +32,8 @@ const ingredientSlice = createSlice({
     name: 'ingredients',
     initialState,
     reducers: {
-        addBun: (state, {payload}: {payload: TIngredient}) => {
-            state.constructorItems.bun = {...payload, id: nanoid()}
+        addBun: (state, {payload}: {payload: {ingredient: TIngredient; id: string}}) => {
+            state.constructorItems.bun = {...payload.ingredient, id: payload.id}
         },
         removeBun: (state) => {
             state.constructorItems.bun = null

@@ -8,6 +8,7 @@ import { getIngredientsThunk, selectIngredients, selectIsIngredientsLoading } fr
 import React, { useEffect } from 'react';
 import { getUserThunk } from '../../slices/user-slice';
 import { Preloader } from '@ui';
+import { getFeedsThunk, getOrdersThunk } from '../../slices/orders-slice';
 
 const App = () => {
   const location = useLocation();
@@ -19,6 +20,8 @@ const App = () => {
   useEffect(() => {
     dispatch(getIngredientsThunk())
     dispatch(getUserThunk())
+    
+    dispatch(getOrdersThunk())
   }, [])
 
   const backgroundLocation = location.state?.backgroundLocation;
@@ -33,26 +36,22 @@ const App = () => {
           <Routes location={backgroundLocation || location}>
             <Route path='/' element={<ConstructorPage />} />
             <Route path='/feed' element={<Feed />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/register' element={<Register />} />
-            <Route path='/forgot-password' element={<ForgotPassword />} />
-            <Route path='/reset-password' element={<ResetPassword />} />
-            <Route element={<ProtectedRoute />}>              
-              <Route path='/profile' element={<Profile />} />
-              <Route path='/profile/orders' element={<ProfileOrders />} />
-              <Route path='/profile/orders/:number' element={<OrderInfo />} />
-            </Route>
+            <Route path='/ingredients/:id' element={<IngredientDetails isMain/>} />
+            <Route path='/login' element={<ProtectedRoute anonymous><Login /></ProtectedRoute>} />
+            <Route path='/register' element={<ProtectedRoute anonymous><Register /></ProtectedRoute>} />
+            <Route path='/forgot-password' element={<ProtectedRoute anonymous><ForgotPassword /></ProtectedRoute>} />
+            <Route path='/reset-password' element={<ProtectedRoute anonymous><ResetPassword /></ProtectedRoute>} />
+            <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path='/profile/orders' element={<ProtectedRoute><ProfileOrders /></ProtectedRoute>} />
+            <Route path='/profile/orders/:number' element={<ProtectedRoute><OrderInfo /></ProtectedRoute>} />
             <Route path='*' element={<NotFound404 />} />
           </Routes>
 
           {backgroundLocation &&
             <Routes>
               <Route path='/feed/:number' element={<Modal title='Информация о заказе' onClose={() => { navigate(-1) }}><OrderInfo /></Modal>} />
-              <Route path='/ingredients/:id' element={<Modal title='Ингредиенты' onClose={() => { navigate(-1) }}><IngredientDetails /></Modal>} />
-
-              <Route element={<ProtectedRoute />}>
-                <Route path='/profile/orders/:number' element={<Modal title='Информация о заказе' onClose={() => { navigate(-1) }}><OrderInfo /></Modal>} />
-              </Route>
+              <Route path='/ingredients/:id' element={<Modal title='Детали ингредиента' onClose={() => { navigate(-1) }}><IngredientDetails/></Modal>} />
+              <Route path='/profile/orders/:number' element={<ProtectedRoute><Modal title='Информация о заказе' onClose={() => { navigate(-1) }}><OrderInfo /></Modal></ProtectedRoute>} />
             </Routes>
           }
         </>
