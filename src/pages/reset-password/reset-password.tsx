@@ -3,12 +3,15 @@ import { useNavigate } from 'react-router-dom';
 
 import { resetPasswordApi } from '@api';
 import { ResetPasswordUI } from '@ui-pages';
+import { useSelector } from '../../services/store';
+import { selectErrorUser } from '../../slices/user-slice';
 
 export const ResetPassword: FC = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
   const [error, setError] = useState<Error | null>(null);
+  const errorText = useSelector(selectErrorUser)
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -29,7 +32,7 @@ export const ResetPassword: FC = () => {
 
   return (
     <ResetPasswordUI
-      errorText={error?.message}
+      errorText={errorText}
       password={password}
       token={token}
       setPassword={setPassword}

@@ -38,12 +38,24 @@ const ingredientSlice = createSlice({
         removeBun: (state) => {
             state.constructorItems.bun = null
         },
-        addIngredient: (state, {payload}: {payload: {ingredient: TIngredient; id: string}}) => {
+        addMain: (state, {payload}: {payload: {ingredient: TIngredient; id: string}}) => {
             state.constructorItems.ingredients.push({...payload.ingredient, id: payload.id})
         },
-        removeIngredient: (state, {payload}: {payload: string}) => {
-            state.constructorItems.ingredients = state.constructorItems.ingredients.filter(item => item.id != payload)
-        }
+        addSauce: (state, {payload}: {payload: {ingredient: TIngredient; id: string}}) => {
+            state.constructorItems.ingredients.splice(Math.floor(state.constructorItems.ingredients.length/2), 0, {...payload.ingredient, id: payload.id})
+        },
+        removeIngredient: (state, {payload}: {payload: number}) => {
+            state.constructorItems.ingredients.splice(payload, 1)
+        },
+        clearConstructorItems: (state) => {
+            state.constructorItems = {bun:null, ingredients: []}
+        },
+        moveUp: (state, {payload}: {payload: number}) => {
+            state.constructorItems.ingredients[payload-1] = state.constructorItems.ingredients.splice(payload, 1, state.constructorItems.ingredients[payload-1])[0]
+        },
+        moveDown: (state, {payload}: {payload: number}) => {
+            state.constructorItems.ingredients[payload] = state.constructorItems.ingredients.splice(payload+1, 1, state.constructorItems.ingredients[payload])[0]
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(getIngredientsThunk.pending, (state) => {
@@ -62,5 +74,5 @@ const ingredientSlice = createSlice({
 export const selectIsIngredientsLoading = (state: RootState) => state.ingredients.isLoading;
 export const selectIngredients = (state: RootState) => state.ingredients.ingredients;
 export const selectConstructorItems = (state: RootState) => state.ingredients.constructorItems;
-export const {addBun, removeBun, addIngredient, removeIngredient} = ingredientSlice.actions;
+export const {addBun, removeBun, addMain, addSauce, removeIngredient, clearConstructorItems, moveUp, moveDown} = ingredientSlice.actions;
 export default ingredientSlice.reducer

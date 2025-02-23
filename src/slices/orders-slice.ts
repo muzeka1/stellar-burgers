@@ -15,7 +15,7 @@ export const getOrdersThunk = createAsyncThunk(
 
 export const orderBurgerThunk = createAsyncThunk(
     'orders/orderBurger',
-    async (ingredients: string[]) => orderBurgerApi(ingredients)
+    async (ids: string[]) => orderBurgerApi(ids)
 )
 
 export const getOrderByNumberThunk = createAsyncThunk(
@@ -25,22 +25,33 @@ export const getOrderByNumberThunk = createAsyncThunk(
 
 export interface IOrdersState {
     isLoading: boolean;
-    orders: TOrder[] | null;
-    feeds: TFeedsResponse | null,
+    orders: TOrder[];
+    feeds: TFeedsResponse | null;
     error: string | null;
+    successedOrder: TOrder | null;
+    isOrderSuccessed: true | false | null;
 }
 
 const initialState: IOrdersState = {
     isLoading: false,
-    orders: null,
+    orders: [],
     feeds: null,
     error: null,
+    successedOrder: null,
+    isOrderSuccessed: null
 }
 
 const orderSlice = createSlice({
     name: 'orders',
     initialState,
-    reducers: {},
+    reducers: {
+        clearOrderData: (state) => {
+            state.successedOrder = null;
+        },
+        changeLoadingOrder: (state) => {
+            state.isLoading = false;
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(getOrdersThunk.pending, (state) => {
             state.isLoading = true
@@ -65,14 +76,18 @@ const orderSlice = createSlice({
             state.feeds = payload;
         })
         builder.addCase(orderBurgerThunk.pending, (state) => {
-            state.isLoading = true
+            state.isLoading = true;
+            state.isOrderSuccessed = null;
         })
         builder.addCase(orderBurgerThunk.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error?.message ?? "Unknown error"
+            state.isOrderSuccessed = false;
         })
-        builder.addCase(orderBurgerThunk.fulfilled, (state, {payload}) => {
+        builder.addCase(orderBurgerThunk.fulfilled, (state, action) => {
             state.isLoading = false;
+            state.successedOrder = action.payload.order;
+            state.isOrderSuccessed = true
         })
         builder.addCase(getOrderByNumberThunk.pending, (state) => {
             state.isLoading = true
@@ -81,14 +96,18 @@ const orderSlice = createSlice({
             state.isLoading = false;
             state.error = action.error?.message ?? "Unknown error"
         })
-        builder.addCase(getOrderByNumberThunk.fulfilled, (state, {payload}) => {
+        builder.addCase(getOrderByNumberThunk.fulfilled, (state, action) => {
             state.isLoading = false;
         })
     }
 })
 
 export const selectOrders = (state: RootState) => state.orders.orders;
-
+export const selectIsOrderRequest = (state: RootState) => state.orders.isLoading;
+export const selectSuccessedOrder = (state: RootState) => state.orders.successedOrder;
+export const selectIsOrderSuccessed = (state: RootState) => state.orders.isOrderSuccessed;
 export const selectFeeds = (state: RootState) => state.orders.feeds;
+export const selectOrderError = (state: RootState) => state.orders.error;
+export const {clearOrderData, changeLoadingOrder} = orderSlice.actions
 
 export default orderSlice.reducer
