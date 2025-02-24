@@ -26,6 +26,7 @@ export const getOrderByNumberThunk = createAsyncThunk(
 export interface IOrdersState {
     isLoading: boolean;
     orders: TOrder[];
+    orderByNumber: TOrder | null;
     feeds: TFeedsResponse | null;
     error: string | null;
     successedOrder: TOrder | null;
@@ -36,6 +37,7 @@ export interface IOrdersState {
 const initialState: IOrdersState = {
     isLoading: false,
     orders: [],
+    orderByNumber: null,
     feeds: null,
     error: null,
     successedOrder: null,
@@ -92,7 +94,8 @@ const orderSlice = createSlice({
             state.isOrderLoading = false;
         })
         builder.addCase(getOrderByNumberThunk.pending, (state) => {
-            state.isOrderLoading = true
+            state.isOrderLoading = true;
+            state.orderByNumber = null;
         })
         builder.addCase(getOrderByNumberThunk.rejected, (state, action) => {
             state.isOrderLoading = false;
@@ -100,11 +103,13 @@ const orderSlice = createSlice({
         })
         builder.addCase(getOrderByNumberThunk.fulfilled, (state, action) => {
             state.isOrderLoading = false;
+            state.orderByNumber = action.payload.orders[0]
         })
     }
 })
 
 export const selectOrders = (state: RootState) => state.orders.orders;
+export const selectOrderByNumber = (state: RootState) => state.orders.orderByNumber;
 export const selectIsOrderRequest = (state: RootState) => state.orders.isOrderLoading;
 export const selectSuccessedOrder = (state: RootState) => state.orders.successedOrder;
 export const selectIsOrderSuccessed = (state: RootState) => state.orders.isOrderSuccessed;
