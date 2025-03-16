@@ -1,8 +1,6 @@
-import exp from "constants"
 import { TIngredient } from "../utils/types"
 import ingredientsReducer, { addBun, addMain, addSauce, getIngredientsThunk, IIngredientsState, moveDown, moveUp, removeIngredient } from "./ingredients-slice"
 import { configureStore } from "@reduxjs/toolkit"
-import { getIngredientsApi } from "../utils/burger-api"
 
 afterEach(() => {
     jest.clearAllMocks()

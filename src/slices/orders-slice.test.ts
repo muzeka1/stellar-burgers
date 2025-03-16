@@ -1,9 +1,6 @@
-import { AsyncThunk, configureStore } from "@reduxjs/toolkit"
-import { getFeedsApi, orderBurgerApi, TFeedsResponse, TNewOrderResponse } from "../utils/burger-api"
+import { configureStore } from "@reduxjs/toolkit"
+import { TFeedsResponse } from "../utils/burger-api"
 import ordersReducer, { getFeedsThunk, getOrdersThunk, orderBurgerThunk } from './orders-slice'
-import { getOrdersApi } from '../utils/burger-api';
-import { TOrder } from "../utils/types";
-import { AsyncThunkConfig } from "@reduxjs/toolkit/dist/createAsyncThunk";
 
 jest.mock('../utils/burger-api', () => ({
     ...jest.requireActual('../utils/burger-api'),
