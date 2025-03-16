@@ -1,5 +1,5 @@
-import { AsyncThunk, configureStore, Reducer } from "@reduxjs/toolkit";
-import { forgotPasswordApi, getUserApi, loginUserApi, logoutApi, registerUserApi, resetPasswordApi, TAuthResponse, updateUserApi } from "../utils/burger-api";
+import { configureStore } from "@reduxjs/toolkit";
+import { TAuthResponse } from "../utils/burger-api";
 import userReducer, { getUserThunk, loginUserThunk, logoutUserThunk, registerUserThunk } from './user-slice'
 import { deleteCookie, getCookie, setCookie } from "../utils/cookie";
 
