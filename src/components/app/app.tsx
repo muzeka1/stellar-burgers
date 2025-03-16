@@ -20,6 +20,8 @@ const App = () => {
   useEffect(() => {
     dispatch(getIngredientsThunk())
     dispatch(getUserThunk())
+    
+    dispatch(getOrdersThunk())
   }, [])
 
   const backgroundLocation = location.state?.backgroundLocation;
@@ -34,7 +36,6 @@ const App = () => {
           <Routes location={backgroundLocation || location}>
             <Route path='/' element={<ConstructorPage />} />
             <Route path='/feed' element={<Feed />} />
-            <Route path='/feed/:number' element={<OrderInfo />} />
             <Route path='/ingredients/:id' element={<IngredientDetails isMain/>} />
             <Route path='/login' element={<ProtectedRoute anonymous><Login /></ProtectedRoute>} />
             <Route path='/register' element={<ProtectedRoute anonymous><Register /></ProtectedRoute>} />

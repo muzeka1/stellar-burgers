@@ -12,6 +12,7 @@ export const Feed: FC = () => {
 
   useEffect(()=>{
     dispatch(getFeedsThunk())
+    dispatch(getOrdersThunk())
   }, [])
 
   if (isLoading) { return <Preloader /> }
