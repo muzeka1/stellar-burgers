@@ -5,11 +5,9 @@ import ingredientsReducer from "../slices/ingredients-slice"
 
 describe('проверка rootReducer', () => {
     it('проверка возвращаемого значения', () => {
-        
         const userInitialState = userReducer(undefined, { type: 'UNKNOWN_ACTION' });
         const ingredientsInitialState = ingredientsReducer(undefined, { type: 'UNKNOWN_ACTION' });
         const ordersInitialState = ordersReducer(undefined, { type: 'UNKNOWN_ACTION' });
-
         const expectedInitialState = {
             user: userInitialState,
             ingredients: ingredientsInitialState,
